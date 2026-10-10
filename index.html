@@ -38,12 +38,12 @@
         }
         label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 15px;
             color: #0369a1;
             font-weight: 400;
         }
-        input, textarea {
+        textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #7dd3fc;
@@ -54,8 +54,9 @@
             box-sizing: border-box;
             outline: none;
             transition: 0.3s;
+            resize: none;
         }
-        input:focus, textarea:focus {
+        textarea:focus {
             border-color: #38bdf8;
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
@@ -83,14 +84,10 @@
 <body>
 
     <div class="chat-container">
-        <h2>💬 ส่งข้อความเข้าไลฟ์</h2>
+        <h2>💬 ส่งสาสน์เข้าไลฟ์</h2>
         <div class="input-group">
-            <label>ชื่อของคุณ</label>
-            <input type="text" id="username" placeholder="พิมพ์ชื่อเล่น..." autocomplete="off">
-        </div>
-        <div class="input-group">
-            <label>ข้อความ</label>
-            <textarea id="message" rows="3" placeholder="พิมพ์ข้อความคุยกับสตรีมเมอร์..." autocomplete="off"></textarea>
+            <label>ข้อความของคุณ</label>
+            <textarea id="message" rows="4" placeholder="พิมพ์ข้อความส่งถึงสตรีมเมอร์..." autocomplete="off"></textarea>
         </div>
         <button onclick="sendMessage()">ส่งข้อความ 🚀</button>
     </div>
@@ -108,22 +105,21 @@
         const db = getDatabase(app);
 
         window.sendMessage = function() {
-            const user = document.getElementById('username').value.trim();
             const msg = document.getElementById('message').value.trim();
             
-            if(!user || !msg) {
-                alert('กรุณากรอกชื่อและข้อความก่อนส่งครับ!');
+            if(!msg) {
+                alert('กรุณากรอกข้อความก่อนส่งครับ!');
                 return;
             }
 
             const chatRef = ref(db, 'chats');
             push(chatRef, {
-                username: user,
+                username: "ผู้ส่งสาสน์",
                 message: msg,
                 timestamp: Date.now()
             }).then(() => {
                 document.getElementById('message').value = '';
-                // แจ้งเตือนเล็กน้อยหรือปล่อยว่างไว้เพื่อให้พิมพ์ต่อเนื่องได้
+                alert('ส่งสาสน์ถึงแล้ว !');
             }).catch((error) => {
                 alert('เกิดข้อผิดพลาดในการส่ง: ' + error.message);
             });
