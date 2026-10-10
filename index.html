@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Chat Sender - ทะเลพาสเทล</title>
+    <title>Live Chat Sender - LiriellSEV1</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -84,12 +84,12 @@
 <body>
 
     <div class="chat-container">
-        <h2>💬 ส่งสาสน์เข้าไลฟ์</h2>
+        <h2>💬 ส่งคลื่นน้ำเข้าไลฟ์</h2>
         <div class="input-group">
             <label>ข้อความของคุณ</label>
             <textarea id="message" rows="4" placeholder="พิมพ์ข้อความส่งถึงสตรีมเมอร์..." autocomplete="off"></textarea>
         </div>
-        <button onclick="sendMessage()">ส่งข้อความ 🚀</button>
+        <button onclick="sendMessage()">ส่งข้อความ 🫧</button>
     </div>
 
     <script type="module">
@@ -107,18 +107,18 @@
             const msg = document.getElementById('message').value.trim();
             
             if(!msg) {
-                alert('กรุณากรอกข้อความก่อนส่งครับ!');
+                alert('กรุณากรอกข้อความก่อนส่ง');
                 return;
             }
 
             const chatRef = ref(db, 'chats');
             push(chatRef, {
-                username: "LiriellSEV1", /* ล็อกชื่อคนส่งเรียบร้อย */
+                username: "LiriellSEV1",
                 message: msg,
                 timestamp: Date.now()
             }).then(() => {
                 document.getElementById('message').value = '';
-                alert('ส่งสาสน์ถึงแล้ว !');
+                alert('ส่งคลื่นน้ำถึงแล้ว !');
             }).catch((error) => {
                 alert('เกิดข้อผิดพลาดในการส่ง: ' + error.message);
             });
