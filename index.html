@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat Sender - ทะเลดาว</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .chat-container {
+            width: 90%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(135, 206, 250, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        h2 {
+            text-align: center;
+            color: #bde0fe;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(135, 206, 250, 0.5);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #a2d2ff;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(135, 206, 250, 0.3);
+            background: rgba(13, 27, 42, 0.6);
+            color: #fff;
+            border-radius: 10px;
+            font-family: 'Prompt', sans-serif;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus, textarea:focus {
+            border-color: #ffafcc;
+            box-shadow: 0 0 10px rgba(255, 175, 204, 0.5);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #48cae4, #ffafcc);
+            border: none;
+            color: #0d1b2a;
+            font-weight: 600;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Prompt', sans-serif;
+        }
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 175, 204, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <h2>💬 ส่งข้อความเข้าไลฟ์</h2>
+        <div class="input-group">
+            <label>ชื่อของคุณ</label>
+            <input type="text" id="username" placeholder="พิมพ์ชื่อเล่น..." autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label>ข้อความ</label>
+            <textarea id="message" rows="3" placeholder="พิมพ์ข้อความคุยกับสตรีมเมอร์..." autocomplete="off"></textarea>
+        </div>
+        <button onclick="sendMessage()">ส่งข้อความ 🚀</button>
+    </div>
+
+    <!-- ส่วนเชื่อมต่อ Firebase -->
+    <script type="module">
+        // โค้ดส่งข้อมูลเข้า Firebase จะใส่ตรงนี้
+        window.sendMessage = function() {
+            const user = document.getElementById('username').value;
+            const msg = document.getElementById('message').value;
+            if(!user || !msg) {
+                alert('กรุณากรอกชื่อและข้อความก่อนส่งครับ!');
+                return;
+            }
+            alert('ส่งข้อความเรียบร้อย! (ระบบฐานข้อมูลกำลังเชื่อมต่อ)');
+            document.getElementById('message').value = '';
+        }
+    </script>
+</body>
+</html>
