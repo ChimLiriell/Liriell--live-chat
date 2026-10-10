@@ -95,16 +95,38 @@
         <button onclick="sendMessage()">ส่งข้อความ 🚀</button>
     </div>
 
+    <!-- เชื่อมต่อ Firebase Realtime Database -->
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            databaseURL: "https://liriell-chat-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
         window.sendMessage = function() {
-            const user = document.getElementById('username').value;
-            const msg = document.getElementById('message').value;
+            const user = document.getElementById('username').value.trim();
+            const msg = document.getElementById('message').value.trim();
+            
             if(!user || !msg) {
                 alert('กรุณากรอกชื่อและข้อความก่อนส่งครับ!');
                 return;
             }
-            alert('ส่งข้อความเรียบร้อย! (เดี๋ยวเราเชื่อม Firebase ต่อ)');
-            document.getElementById('message').value = '';
+
+            const chatRef = ref(db, 'chats');
+            push(chatRef, {
+                username: user,
+                message: msg,
+                timestamp: Date.now()
+            }).then(() => {
+                document.getElementById('message').value = '';
+                // แจ้งเตือนเล็กน้อยหรือปล่อยว่างไว้เพื่อให้พิมพ์ต่อเนื่องได้
+            }).catch((error) => {
+                alert('เกิดข้อผิดพลาดในการส่ง: ' + error.message);
+            });
         }
     </script>
 </body>
