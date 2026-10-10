@@ -3,63 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>Live Chat Overlay - Pastel Bubble</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
-            padding: 20px;
-            font-family: 'Prompt', sans-serif;
-            background: transparent; /* โปร่งใสสำหรับซ้อนทับจอไลฟ์ใน Prism */
+            padding: 0;
+            font-family: 'Noto Sans Thai', sans-serif;
+            background: transparent;
             overflow: hidden;
+            width: 100vw;
             height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+            justify-content: center; /* จัดกึ่งกลางแนวนอนของจอ */
+            align-items: center;     /* จัดกึ่งกลางแนวตั้งของจอ */
         }
 
         #chat-box {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 12px;
-            max-height: 80vh;
-            overflow-y: hidden;
+            width: 100%;
+            max-width: 600px;
             position: relative;
             z-index: 10;
         }
 
         .chat-item {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(186, 230, 253, 0.8);
-            border-left: 5px solid #38bdf8;
-            padding: 12px 18px;
-            border-radius: 14px;
+            border: 1px solid rgba(186, 230, 253, 0.9);
+            border-top: 4px solid #38bdf8;
+            padding: 14px 22px;
+            border-radius: 16px;
             color: #1e293b;
             animation: fadeIn 0.4s ease-out;
-            box-shadow: 0 8px 20px rgba(147, 197, 253, 0.25);
-            max-width: 450px;
+            box-shadow: 0 10px 25px rgba(147, 197, 253, 0.3);
+            width: 80%;
+            text-align: center;
         }
 
         .chat-user {
             font-weight: 600;
             color: #0284c7;
-            font-size: 15px;
+            font-size: 16px;
             margin-bottom: 4px;
         }
 
         .chat-text {
-            font-size: 16px;
+            font-size: 18px;
             color: #334155;
             word-break: break-word;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: scale(0.9) translateY(15px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* ฟองสบู่พาสเทลลอยขึ้นฉากหลัง */
         .bubble-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -95,11 +97,8 @@
 
     <div class="bubble-container" id="bubbleContainer"></div>
 
-    <div id="chat-box">
-        <!-- ข้อความจะเด้งขึ้นมาตรงนี้อัตโนมัติ -->
-    </div>
+    <div id="chat-box"></div>
 
-    <!-- เชื่อมต่อ Firebase Realtime Database เพื่อฟังข้อความแบบ Realtime -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, query, limitToLast, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -112,7 +111,7 @@
         const db = getDatabase(app);
 
         const chatBox = document.getElementById('chat-box');
-        const chatRef = query(ref(db, 'chats'), limitToLast(15)); // ดึงข้อความล่าสุด 15 ข้อความ
+        const chatRef = query(ref(db, 'chats'), limitToLast(5));
 
         onChildAdded(chatRef, (snapshot) => {
             const data = snapshot.val();
@@ -126,8 +125,8 @@
             
             chatBox.appendChild(chatItem);
             
-            // ลบข้อความเก่าออกถ้าเยอะเกินไป
-            if (chatBox.children.length > 15) {
+            // จำกัดให้แสดงแค่ 5 ข้อความล่าสุด
+            if (chatBox.children.length > 5) {
                 chatBox.removeChild(chatBox.children[0]);
             }
         });
@@ -143,7 +142,7 @@
             return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
 
-        // สร้างฟองสบู่ลอยขึ้นอัตโนมัติ
+        // สร้างฟองสบู่
         function createBubble() {
             const container = document.getElementById('bubbleContainer');
             const bubble = document.createElement('div');
@@ -165,6 +164,11 @@
         }
 
         setInterval(createBubble, 400);
+
+        // รีเฟรชหน้าเว็บอัตโนมัติทุกๆ 60 นาที เพื่อล้างข้อมูลเก่าและเคลียร์แคช
+        setTimeout(() => {
+            location.reload();
+        }, 60 * 60 * 1000);
     </script>
 </body>
 </html>
