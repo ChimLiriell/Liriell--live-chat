@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Chat Sender - ทะเลพาสเทล</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Prompt', sans-serif;
+            font-family: 'Noto Sans Thai', sans-serif;
             background: linear-gradient(135deg, #e0f2fe, #bae6fd, #e0d4fc);
             color: #334155;
             height: 100vh;
@@ -50,7 +50,7 @@
             background: rgba(255, 255, 255, 0.9);
             color: #1e293b;
             border-radius: 12px;
-            font-family: 'Prompt', sans-serif;
+            font-family: 'Noto Sans Thai', sans-serif;
             box-sizing: border-box;
             outline: none;
             transition: 0.3s;
@@ -71,7 +71,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: 0.3s;
-            font-family: 'Prompt', sans-serif;
+            font-family: 'Noto Sans Thai', sans-serif;
             box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
         }
         button:hover {
@@ -92,7 +92,6 @@
         <button onclick="sendMessage()">ส่งข้อความ 🚀</button>
     </div>
 
-    <!-- เชื่อมต่อ Firebase Realtime Database -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -114,7 +113,7 @@
 
             const chatRef = ref(db, 'chats');
             push(chatRef, {
-                username: "ผู้ส่งสาสน์",
+                username: "LiriellSEV1", /* ล็อกชื่อคนส่งเรียบร้อย */
                 message: msg,
                 timestamp: Date.now()
             }).then(() => {
