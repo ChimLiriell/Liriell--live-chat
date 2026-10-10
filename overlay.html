@@ -14,52 +14,52 @@
             width: 100vw;
             height: 100vh;
             display: flex;
-            justify-content: center; /* จัดกึ่งกลางแนวนอนของจอ */
-            align-items: center;     /* จัดกึ่งกลางแนวตั้งของจอ */
+            justify-content: center;
+            align-items: center;
         }
 
         #chat-box {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             width: 100%;
-            max-width: 600px;
+            max-width: 550px;
             position: relative;
             z-index: 10;
         }
 
         .chat-item {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(186, 230, 253, 0.9);
             border-top: 4px solid #38bdf8;
-            padding: 14px 22px;
+            padding: 12px 20px;
             border-radius: 16px;
             color: #1e293b;
-            animation: fadeIn 0.4s ease-out;
-            box-shadow: 0 10px 25px rgba(147, 197, 253, 0.3);
-            width: 80%;
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: 0 8px 20px rgba(147, 197, 253, 0.3);
+            width: 85%;
             text-align: center;
         }
 
         .chat-user {
             font-weight: 600;
             color: #0284c7;
-            font-size: 16px;
-            margin-bottom: 4px;
+            font-size: 15px;
+            margin-bottom: 2px;
         }
 
         .chat-text {
-            font-size: 18px;
+            font-size: 17px;
             color: #334155;
             word-break: break-word;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9) translateY(15px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from { opacity: 0; transform: translateY(10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .bubble-container {
@@ -111,7 +111,8 @@
         const db = getDatabase(app);
 
         const chatBox = document.getElementById('chat-box');
-        const chatRef = query(ref(db, 'chats'), limitToLast(5));
+        // ดึงมาแค่ 2 ข้อความล่าสุดพอ จะได้ไม่ล้นจอและเห็นชัดๆ
+        const chatRef = query(ref(db, 'chats'), limitToLast(2));
 
         onChildAdded(chatRef, (snapshot) => {
             const data = snapshot.val();
@@ -125,8 +126,8 @@
             
             chatBox.appendChild(chatItem);
             
-            // จำกัดให้แสดงแค่ 5 ข้อความล่าสุด
-            if (chatBox.children.length > 5) {
+            // ถ้าเกิน 2 ข้อความ ให้ลบอันเก่าทิ้งทันที
+            if (chatBox.children.length > 2) {
                 chatBox.removeChild(chatBox.children[0]);
             }
         });
@@ -165,7 +166,7 @@
 
         setInterval(createBubble, 400);
 
-        // รีเฟรชหน้าเว็บอัตโนมัติทุกๆ 60 นาที เพื่อล้างข้อมูลเก่าและเคลียร์แคช
+        // รีเฟรชหน้าเว็บอัตโนมัติทุก 60 นาที
         setTimeout(() => {
             location.reload();
         }, 60 * 60 * 1000);
