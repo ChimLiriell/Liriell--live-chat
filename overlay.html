@@ -31,12 +31,11 @@
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(8px);
             border: 2px solid #bae6fd;
-            /* ทำมุมกรอบให้เป็นเอกลักษณ์แนวโค้งดาวน่ารักๆ */
+            /* ทำมุมกรอบเป็นเอกลักษณ์แนวโค้งดาวน่ารักๆ */
             border-radius: 25px 8px 25px 8px;
             padding: 12px 22px;
             color: #1e293b;
             box-shadow: 0 8px 25px rgba(147, 197, 253, 0.35);
-            /* ปรับขนาดกรอบให้พอดีกับข้อความ ไม่ยืดเต็มจอ */
             max-width: 400px;
             width: auto;
             display: inline-block;
@@ -56,7 +55,7 @@
         }
 
         .chat-text {
-            font-size: 14px; /* ขนาดอักษร 14px ตามต้องการ */
+            font-size: 14px;
             color: #334155;
             word-break: break-word;
             line-height: 1.4;
@@ -105,6 +104,9 @@
 </head>
 <body>
 
+    <!-- เล่นเสียงกระดิ่งน่ารักๆ -->
+    <audio id="bellSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+
     <div class="bubble-container" id="bubbleContainer"></div>
 
     <div id="chat-box"></div>
@@ -121,19 +123,27 @@
         const db = getDatabase(app);
 
         const chatBox = document.getElementById('chat-box');
+        const bellSound = document.getElementById('bellSound');
         const chatRef = query(ref(db, 'chats'), limitToLast(1));
 
         let hideTimer = null;
+        let isFirstLoad = true; // ป้องกันไม่ให้เล่นเสียงตอนเพิ่งเปิดหน้าเว็บครั้งแรก
 
         onChildAdded(chatRef, (snapshot) => {
             const data = snapshot.val();
             
-            // ล้างตัวจับเวลาเก่า (ถ้ามีข้อความใหม่ส่งมาซ้อนในช่วง 30 วิ)
+            // เล่นเสียงกระดิ่งเฉพาะเมื่อมีข้อความใหม่เข้ามา (ไม่ใช่ตอนโหลดข้อความเก่าหน้าแรก)
+            if (!isFirstLoad) {
+                bellSound.currentTime = 0;
+                bellSound.play().catch(e => console.log("Audio play blocked by browser:", e));
+            } else {
+                isFirstLoad = false;
+            }
+
             if (hideTimer) {
                 clearTimeout(hideTimer);
             }
 
-            // เคลียร์กล่องข้อความเก่าทิ้ง เหลือแสดงอันล่าสุดอันเดียว
             chatBox.innerHTML = '';
 
             const chatItem = document.createElement('div');
@@ -146,13 +156,13 @@
             
             chatBox.appendChild(chatItem);
             
-            // ตั้งเวลาให้ข้อความหายไปเองหลังจากผ่านไป 30 วินาที
+            // ค้างไว้ 30 วินาทีแล้วค่อยๆ หายไป
             hideTimer = setTimeout(() => {
                 chatItem.classList.add('fade-out');
                 setTimeout(() => {
                     chatItem.remove();
-                }, 600); // รอให้เอฟเฟกต์เฟดออกเล่นจบแล้วลบออก
-            }, 30000); // 30,000 มิลลิวินาที = 30 วินาที
+                }, 600);
+            }, 30000);
         });
 
         function escapeHtml(text) {
@@ -166,7 +176,6 @@
             return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
 
-        // สร้างฟองสบู่
         function createBubble() {
             const container = document.getElementById('bubbleContainer');
             const bubble = document.createElement('div');
@@ -189,7 +198,7 @@
 
         setInterval(createBubble, 400);
 
-        // รีเฟรชหน้าเว็บอัตโนมัติทุก 60 นาที
+        // รีเฟรชหน้าเว็บทุกๆ 60 นาที
         setTimeout(() => {
             location.reload();
         }, 60 * 60 * 1000);
